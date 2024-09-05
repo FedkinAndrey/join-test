@@ -1,0 +1,73 @@
+@import './reset.scss';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  &::before,
+  &::after {
+    box-sizing: border-box;
+  }
+}
+
+html[data-color-scheme='dark'] {
+  color-scheme: dark;
+}
+
+html[data-color-scheme='light'] {
+  color-scheme: light;
+}
+
+html {
+  font-size: 14px;
+}
+
+.fc-day-today {
+  background-color: #F5F6FA !important;
+}
+
+.fc-col-header-cell {
+  border-right: none !important;
+  background-color: #F5F6FA !important;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+  text-transform: uppercase;
+  color: #A3A6B4 !important;
+}
+
+.fc-col-header-cell:first-child {
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.fc-col-header-cell {
+  border-top: none !important;
+}
+
+.custom-button-group {
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.custom-button-group .MuiButton-outlined {
+  border-color: #D7DAE2;
+  color: #4D4F5C;
+}
+
+.modal-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid white;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+

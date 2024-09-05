@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+
+* {
+	-webkit-tap-highlight-color: transparent;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+	-webkit-font-smoothing: antialiased;
+}
+
+body {
+	font-family: 'Source Sans Pro', sans-serif;
+	text-rendering: optimizeSpeed;
+}
+
+button {
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	-webkit-appearance: none;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+a {
+	&:active,
+	&:hover {
+		outline: none;
+	}
+	color: inherit;
+	text-decoration: none;
+}
+
+ul,
+ol {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.default-list {
+  padding-left: 10px;
+  ul, ol {
+
+    list-style-type: revert;
+  }
+}
+
+textarea {
+	resize: none;
+	overflow: auto;
+	vertical-align: top;
+}
+
+input {
+	&[type='submit'] {
+		-webkit-appearance: button;
+	}
+}
+
+input,
+textarea,
+select,
+option {
+	font: inherit;
+	outline: none;
+}
+
+img {
+	max-width: 100%;
+	display: block;
+	border: none;
+}
+input,
+textarea {
+	-webkit-appearance: none;
+}
+
+.custom-date-picker {
+	input {
+		padding: 6px 8px;
+	}
+
+	label {
+		transform: translate(14px, 5px) scale(1);
+
+		&.Mui-focused {
+			transform: translate(14px, -10px) scale(0.75);
+		}
+
+		&.MuiFormLabel-filled {
+			transform: translate(14px, -10px) scale(0.75);
+		}
+	}
+}
