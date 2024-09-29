@@ -13,40 +13,57 @@ import { EventClickArg, EventDropArg } from '@fullcalendar/core';
 import CalendarForm from './CalendarForm.tsx';
 import ToolbarText from './ToolbarText.tsx';
 import SubToolbarText from './SubToolbarText.tsx';
+import { CalendarActiveView } from '../types/types.ts';
+import { getStoredEvents, getStoredView } from '../utils/utils.ts';
 
 type FormValues = Omit<CalendarEvent, 'id'> & { time: Date | null; endTime: Date | null; notes?: string };
 
 const CalendarView: React.FC = () => {
 	const { control, handleSubmit, reset, setValue } = useForm<FormValues>();
-	const [events, setEvents] = useState<CalendarEvent[]>([]);
+	const [events, setEvents] = useState<CalendarEvent[]>(getStoredEvents());
 	const [currentTitle, setCurrentTitle] = useState<string>('');
 	const [open, setOpen] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [currentEventId, setCurrentEventId] = useState<string | null>(null);
-	const [activeView, setActiveView] = useState<'dayGridMonth' | 'timeGridWeek' | 'timeGridDay'>('dayGridMonth');
+	const [activeView, setActiveView] = useState<CalendarActiveView>(getStoredView());
 	const [isTodayActive, setIsTodayActive] = useState<boolean>(false);
 	const [activeCell, setActiveCell] = useState<HTMLElement | null>(null);
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [clickedCellPosition, setClickedCellPosition] = useState<{ top: number; left: number } | null>(null);
 
+	const calendarRef = useRef<FullCalendar>(null);
+
+	useEffect(() => {
+		localStorage.setItem('calendarEvents', JSON.stringify(events));
+	}, [events]);
+
+	useEffect(() => {
+		localStorage.setItem('calendarView', activeView);
+	}, [activeView]);
+
+	useEffect(() => {
+		const calendarApi = calendarRef.current?.getApi();
+		if (calendarApi) {
+			calendarApi.changeView(activeView);
+		}
+	}, [activeView]);
+
 	const handleClose = () => {
 		setOpen(false);
-
 		if (activeCell) {
 			activeCell.style.boxShadow = '';
 		}
-
 		setActiveCell(null);
 		reset();
 	};
 
-	const calendarRef = useRef<FullCalendar>(null);
-
-	const handleViewChange = (view: 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay') => {
+	const handleViewChange = (view: CalendarActiveView) => {
 		const calendarApi = calendarRef.current?.getApi();
-		calendarApi?.changeView(view);
-		setCurrentTitle(calendarApi?.view.title || '');
-		setActiveView(view);
+		if (calendarApi) {
+			calendarApi.changeView(view); // Change the view in FullCalendar
+			setCurrentTitle(calendarApi.view.title || '');
+			setActiveView(view); // Update the activeView state
+		}
 	};
 
 	const handleTodayClick = () => {
@@ -76,7 +93,6 @@ const CalendarView: React.FC = () => {
 			const today = new Date();
 			const start = calendarApi.view.currentStart;
 			const end = calendarApi.view.currentEnd;
-
 			setIsTodayActive(today >= start && today < end);
 		}
 	};
@@ -85,7 +101,7 @@ const CalendarView: React.FC = () => {
 		setValue('start', arg.dateStr);
 		reset({ title: '', start: arg.dateStr, time: null, endTime: null, color: '#000' });
 		setIsEditing(false);
-		setIsEditMode(true); // Enable editing mode for new events
+		setIsEditMode(true);
 
 		if (activeCell) {
 			activeCell.style.boxShadow = '';
@@ -184,7 +200,7 @@ const CalendarView: React.FC = () => {
 	};
 
 	const handleEditClick = () => {
-		setIsEditMode(true); // Enable editing mode
+		setIsEditMode(true);
 	};
 
 	const handleTimeChange = (time: Date | null) => {
@@ -237,7 +253,7 @@ const CalendarView: React.FC = () => {
 			<FullCalendar
 				ref={calendarRef}
 				plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-				initialView="dayGridMonth"
+				initialView={activeView}
 				events={events}
 				dateClick={handleDateClick}
 				eventClick={handleEventClick}
